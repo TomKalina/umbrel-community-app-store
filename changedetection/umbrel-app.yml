@@ -1,0 +1,25 @@
+manifestVersion: 1
+id: changedetection
+name: Change Detection
+tagline: Get notified when a website changes
+icon: https://svgur.com/i/mvA.svg
+category: Development
+version: "0.0.1"
+port: 4546
+description: >-
+  WIP
+
+developer: Tomáš Kalina
+website: https://skalina.cz
+submitter: Tomáš Kalina
+submission: https://github.com/TomKalina/umbrel-hello-world-app
+repo: https://github.com/TomKalina/umbrel-hello-world-app
+support: https://github.com/TomKalina/umbrel-hello-world-app/issues
+gallery:
+  - https://raw.githubusercontent.com/dgtlmoon/changedetection.io/master/docs/screenshot.png
+releaseNotes: >-
+  Add what's new in the latest version of your app here.
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
