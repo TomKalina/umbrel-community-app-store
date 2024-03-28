@@ -4,7 +4,7 @@ name: Change Detection
 tagline: Get notified when a website changes
 icon: https://svgur.com/i/mvA.svg
 category: Development
-version: "0.0.1"
+version: "0.0.2"
 port: 4546
 description: >-
   WIP
