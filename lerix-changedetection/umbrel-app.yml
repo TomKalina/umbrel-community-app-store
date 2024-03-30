@@ -2,7 +2,7 @@ manifestVersion: 1
 id: lerix-changedetection
 name: Change Detection
 tagline: Get notified when a website changes
-icon: https://svgur.com/i/mvA.svg
+icon: https://changedetection.io/themes/cdio/assets/images/logo/logo-2.svg
 category: Development
 version: "0.0.2"
 port: 4546
