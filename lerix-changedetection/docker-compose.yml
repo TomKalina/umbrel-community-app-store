@@ -6,9 +6,12 @@ services:
     environment:
       # The format here is: <app-id>_<docker-service-name>_1
       APP_HOST: TomKalina-changedetection.io_1
-      APP_PORT: 4546
+      APP_PORT: 5000
     
   server:
     image: dgtlmoon/changedetection.io:latest
-    user: "4546:80"
+    user: "5000:5000"
     init: true
+    restart: on-failure
+    volumes:
+      - "${EXPORTS_APP_DIR}/data/changedetection:/datastore"
