@@ -4,8 +4,8 @@ name: Change Detection
 tagline: Get notified when a website changes
 icon: https://changedetection.io/themes/cdio/assets/images/logo/logo-2.svg
 category: Development
-version: "0.0.3"
-port: 4546
+version: "0.0.4"
+port: 5000
 description: >-
   WIP
 
