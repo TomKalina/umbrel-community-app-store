@@ -14,4 +14,4 @@ services:
     init: true
     restart: on-failure
     volumes:
-      - "${EXPORTS_APP_DIR}/data/changedetection:/datastore"
+      - "${APP_DATA_DIR}/datastore:/datastore"
