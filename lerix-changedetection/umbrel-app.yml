@@ -1,10 +1,10 @@
 manifestVersion: 1
-id: lerix-changedetection.io
+id: lerix-changedetection
 name: Change Detection
 tagline: Get notified when a website changes
 icon: https://changedetection.io/themes/cdio/assets/images/logo/logo-2.svg
 category: Development
-version: "0.0.13"
+version: "0.0.14"
 port: 5000
 description: >-
   WIP
