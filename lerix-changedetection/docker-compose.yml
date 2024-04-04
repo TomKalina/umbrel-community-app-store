@@ -10,7 +10,7 @@ services:
     
   server:
     image: dgtlmoon/changedetection.io:latest
-    user: "5000:5000"
+    user: "1000:1000"
     init: true
     restart: on-failure
     volumes:
