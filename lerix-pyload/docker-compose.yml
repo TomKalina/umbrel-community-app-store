@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+
+  app_proxy:
+    environment:
+      # The format here is: <app-id>_<docker-service-name>_1
+      APP_HOST: lerix-pyload_server_1
+      APP_PORT: 8000
+
+  server:
+    image: lscr.io/linuxserver/pyload-ng:latest
+    restart: unless-stopped
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: UTC
+    volumes:
+      - "${APP_DATA_DIR}/config:/config"

@@ -1,0 +1,26 @@
+manifestVersion: 1
+id: lerix-pyload
+name: pyLoad
+tagline: Download manager for one-click hosters
+icon: https://pyload.net/img/logo.png
+category: Utilities
+version: "0.5.0"
+port: 8000
+description: >-
+  pyLoad is a lightweight download manager with a web UI for one-click hosters,
+  direct links, and more.
+
+developer: pyLoad Team
+website: https://github.com/pyload/pyload-ng
+submitter: Tomáš Kalina
+submission: https://github.com/TomKalina/umbrel-community-app-store
+repo: https://github.com/pyload/pyload-ng
+support: https://github.com/pyload/pyload-ng/issues
+gallery: []
+releaseNotes: >-
+  Initial release in the Lerix community app store.
+
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
