@@ -4,7 +4,7 @@ name: pyLoad
 tagline: Download manager for one-click hosters
 icon: https://pyload.net/img/logo.png
 category: Utilities
-version: "0.5.1"
+version: "0.5.2"
 port: 8000
 description: >-
   pyLoad is a lightweight download manager with a web UI for one-click hosters,
