@@ -13,34 +13,64 @@ services:
       - -c
       - |
         set -e
-        # Install dependencies on first run
-        if ! command -v ttyd &> /dev/null; then
-          apt-get update && apt-get install -y ttyd git docker.io && rm -rf /var/lib/apt/lists/*
+
+        # Install system deps on first run (persisted in /data)
+        if [ ! -f /data/.deps-installed ]; then
+          apt-get update
+          apt-get install -y git curl ca-certificates
+          rm -rf /var/lib/apt/lists/*
+
+          # Install ttyd from GitHub releases
+          ARCH=$$(dpkg --print-architecture)
+          case "$$ARCH" in
+            amd64) TTYD_ARCH="x86_64" ;;
+            arm64) TTYD_ARCH="aarch64" ;;
+            armhf) TTYD_ARCH="armhf" ;;
+            *) TTYD_ARCH="x86_64" ;;
+          esac
+          curl -fSL "https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.$$TTYD_ARCH" -o /usr/local/bin/ttyd
+          chmod +x /usr/local/bin/ttyd
+
+          touch /data/.deps-installed
+        else
+          # Reinstall runtime deps (not persisted across container recreates)
+          if ! command -v git &> /dev/null; then
+            apt-get update && apt-get install -y git curl ca-certificates && rm -rf /var/lib/apt/lists/*
+          fi
+          if [ ! -f /usr/local/bin/ttyd ]; then
+            ARCH=$$(dpkg --print-architecture)
+            case "$$ARCH" in
+              amd64) TTYD_ARCH="x86_64" ;;
+              arm64) TTYD_ARCH="aarch64" ;;
+              armhf) TTYD_ARCH="armhf" ;;
+              *) TTYD_ARCH="x86_64" ;;
+            esac
+            curl -fSL "https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.$$TTYD_ARCH" -o /usr/local/bin/ttyd
+            chmod +x /usr/local/bin/ttyd
+          fi
         fi
+
         # Clone and build NanoClaw on first run
         if [ ! -f /data/nanoclaw/package.json ]; then
           echo "First run: cloning NanoClaw..."
           git clone --depth 1 https://github.com/qwibitai/NanoClaw.git /data/nanoclaw
-          cd /data/nanoclaw && npm ci && npm run build
+          cd /data/nanoclaw
+          npm ci
+          npm run build
         fi
+
         cd /data/nanoclaw
+
         # Write .env
-        cat > .env <<ENVEOF
-        ANTHROPIC_API_KEY=$${ANTHROPIC_API_KEY}
-        CLAUDE_CODE_OAUTH_TOKEN=$${CLAUDE_CODE_OAUTH_TOKEN}
-        ASSISTANT_NAME=$${ASSISTANT_NAME:-Andy}
-        CONTAINER_IMAGE=nanoclaw-agent:latest
-        TZ=$${TZ:-UTC}
-        ENVEOF
-        sed -i 's/^        //' .env
-        # Build agent container if needed
-        if docker info &> /dev/null 2>&1; then
-          if ! docker image inspect nanoclaw-agent:latest &> /dev/null 2>&1; then
-            echo "Building agent container..."
-            cd /data/nanoclaw/container && docker build -t nanoclaw-agent:latest . || true
-            cd /data/nanoclaw
-          fi
-        fi
+        printf '%s\n' \
+          "ANTHROPIC_API_KEY=$${ANTHROPIC_API_KEY}" \
+          "CLAUDE_CODE_OAUTH_TOKEN=$${CLAUDE_CODE_OAUTH_TOKEN}" \
+          "ASSISTANT_NAME=$${ASSISTANT_NAME:-Andy}" \
+          "CONTAINER_IMAGE=nanoclaw-agent:latest" \
+          "TZ=$${TZ:-UTC}" \
+          > .env
+
+        echo "Starting NanoClaw..."
         exec ttyd --port 7681 --writable node /data/nanoclaw/dist/index.js
     environment:
       ANTHROPIC_API_KEY: ${APP_NANOCLAW_ANTHROPIC_API_KEY:-}
