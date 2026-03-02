@@ -1,0 +1,35 @@
+manifestVersion: 1
+id: lerix-nanoclaw
+name: NanoClaw
+tagline: Personal Claude assistant for WhatsApp
+icon: https://raw.githubusercontent.com/qwibitai/NanoClaw/main/assets/icon.png
+category: AI
+version: "1.1.6"
+port: 7681
+description: >-
+  NanoClaw is a lightweight, self-hosted AI assistant powered by Claude that
+  integrates with WhatsApp. It features per-group memory, scheduled tasks,
+  and agent swarms running in isolated containers.
+
+  After installation, open the app to see the web terminal. Scan the QR code
+  with WhatsApp to link your assistant.
+
+  Authentication: Set either APP_NANOCLAW_ANTHROPIC_API_KEY (Anthropic API key)
+  or APP_NANOCLAW_CLAUDE_CODE_OAUTH_TOKEN (Claude Code subscription token).
+
+  Note: This app requires Docker socket access for running agent containers.
+
+developer: Gavriel Cohen
+website: https://nanoclaw.net
+submitter: Tomáš Kalina
+submission: https://github.com/TomKalina/umbrel-community-app-store
+repo: https://github.com/qwibitai/NanoClaw
+support: https://github.com/qwibitai/NanoClaw/issues
+gallery: []
+releaseNotes: >-
+  Initial release in the Lerix community app store.
+
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
