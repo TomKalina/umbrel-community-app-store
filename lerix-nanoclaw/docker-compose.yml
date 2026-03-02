@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
 
   app_proxy:
@@ -8,17 +6,47 @@ services:
       APP_PORT: 7681
 
   server:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: node:22-slim
     restart: unless-stopped
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        # Install dependencies on first run
+        if ! command -v ttyd &> /dev/null; then
+          apt-get update && apt-get install -y ttyd git docker.io && rm -rf /var/lib/apt/lists/*
+        fi
+        # Clone and build NanoClaw on first run
+        if [ ! -f /data/nanoclaw/package.json ]; then
+          echo "First run: cloning NanoClaw..."
+          git clone --depth 1 https://github.com/qwibitai/NanoClaw.git /data/nanoclaw
+          cd /data/nanoclaw && npm ci && npm run build
+        fi
+        cd /data/nanoclaw
+        # Write .env
+        cat > .env <<ENVEOF
+        ANTHROPIC_API_KEY=$${ANTHROPIC_API_KEY}
+        CLAUDE_CODE_OAUTH_TOKEN=$${CLAUDE_CODE_OAUTH_TOKEN}
+        ASSISTANT_NAME=$${ASSISTANT_NAME:-Andy}
+        CONTAINER_IMAGE=nanoclaw-agent:latest
+        TZ=$${TZ:-UTC}
+        ENVEOF
+        sed -i 's/^        //' .env
+        # Build agent container if needed
+        if docker info &> /dev/null 2>&1; then
+          if ! docker image inspect nanoclaw-agent:latest &> /dev/null 2>&1; then
+            echo "Building agent container..."
+            cd /data/nanoclaw/container && docker build -t nanoclaw-agent:latest . || true
+            cd /data/nanoclaw
+          fi
+        fi
+        exec ttyd --port 7681 --writable node /data/nanoclaw/dist/index.js
     environment:
       ANTHROPIC_API_KEY: ${APP_NANOCLAW_ANTHROPIC_API_KEY:-}
       CLAUDE_CODE_OAUTH_TOKEN: ${APP_NANOCLAW_CLAUDE_CODE_OAUTH_TOKEN:-}
       ASSISTANT_NAME: ${APP_NANOCLAW_ASSISTANT_NAME:-Andy}
       TZ: UTC
     volumes:
-      - "${APP_DATA_DIR}/data:/app/data"
-      - "${APP_DATA_DIR}/store:/app/store"
-      - "${APP_DATA_DIR}/groups:/app/groups"
+      - "${APP_DATA_DIR}/data:/data"
       - /var/run/docker.sock:/var/run/docker.sock
