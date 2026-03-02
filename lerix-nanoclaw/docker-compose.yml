@@ -6,52 +6,27 @@ services:
       APP_PORT: 7681
 
   server:
-    image: node:22-slim
+    image: node:22
     restart: unless-stopped
     command:
       - bash
       - -c
       - |
-        set -e
+        echo "=== NanoClaw starting ==="
 
-        # Install system deps on first run (persisted in /data)
-        if [ ! -f /data/.deps-installed ]; then
-          apt-get update
-          apt-get install -y git curl ca-certificates
-          rm -rf /var/lib/apt/lists/*
-
-          # Install ttyd from GitHub releases
+        # Install ttyd
+        if [ ! -f /usr/local/bin/ttyd ]; then
           ARCH=$$(dpkg --print-architecture)
-          case "$$ARCH" in
-            amd64) TTYD_ARCH="x86_64" ;;
-            arm64) TTYD_ARCH="aarch64" ;;
-            armhf) TTYD_ARCH="armhf" ;;
-            *) TTYD_ARCH="x86_64" ;;
-          esac
-          curl -fSL "https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.$$TTYD_ARCH" -o /usr/local/bin/ttyd
+          if [ "$$ARCH" = "arm64" ]; then
+            curl -fSL "https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.aarch64" -o /usr/local/bin/ttyd
+          else
+            curl -fSL "https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.x86_64" -o /usr/local/bin/ttyd
+          fi
           chmod +x /usr/local/bin/ttyd
-
-          touch /data/.deps-installed
-        else
-          # Reinstall runtime deps (not persisted across container recreates)
-          if ! command -v git &> /dev/null; then
-            apt-get update && apt-get install -y git curl ca-certificates && rm -rf /var/lib/apt/lists/*
-          fi
-          if [ ! -f /usr/local/bin/ttyd ]; then
-            ARCH=$$(dpkg --print-architecture)
-            case "$$ARCH" in
-              amd64) TTYD_ARCH="x86_64" ;;
-              arm64) TTYD_ARCH="aarch64" ;;
-              armhf) TTYD_ARCH="armhf" ;;
-              *) TTYD_ARCH="x86_64" ;;
-            esac
-            curl -fSL "https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.$$TTYD_ARCH" -o /usr/local/bin/ttyd
-            chmod +x /usr/local/bin/ttyd
-          fi
         fi
 
         # Clone and build NanoClaw on first run
-        if [ ! -f /data/nanoclaw/package.json ]; then
+        if [ ! -f /data/nanoclaw/dist/index.js ]; then
           echo "First run: cloning NanoClaw..."
           git clone --depth 1 https://github.com/qwibitai/NanoClaw.git /data/nanoclaw
           cd /data/nanoclaw
@@ -62,15 +37,13 @@ services:
         cd /data/nanoclaw
 
         # Write .env
-        printf '%s\n' \
-          "ANTHROPIC_API_KEY=$${ANTHROPIC_API_KEY}" \
-          "CLAUDE_CODE_OAUTH_TOKEN=$${CLAUDE_CODE_OAUTH_TOKEN}" \
-          "ASSISTANT_NAME=$${ASSISTANT_NAME:-Andy}" \
-          "CONTAINER_IMAGE=nanoclaw-agent:latest" \
-          "TZ=$${TZ:-UTC}" \
-          > .env
+        echo "ANTHROPIC_API_KEY=$$ANTHROPIC_API_KEY" > .env
+        echo "CLAUDE_CODE_OAUTH_TOKEN=$$CLAUDE_CODE_OAUTH_TOKEN" >> .env
+        echo "ASSISTANT_NAME=$${ASSISTANT_NAME:-Andy}" >> .env
+        echo "CONTAINER_IMAGE=nanoclaw-agent:latest" >> .env
+        echo "TZ=$${TZ:-UTC}" >> .env
 
-        echo "Starting NanoClaw..."
+        echo "=== Starting NanoClaw via ttyd on port 7681 ==="
         exec ttyd --port 7681 --writable node /data/nanoclaw/dist/index.js
     environment:
       ANTHROPIC_API_KEY: ${APP_NANOCLAW_ANTHROPIC_API_KEY:-}
