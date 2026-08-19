@@ -15,6 +15,10 @@ description: >-
 
   State (SQLite database + backups) is persisted to the Umbrel data directory
   via /app/data. Updates follow the standard Umbrel app update flow.
+
+
+  Default login password is "9router" — change it in the dashboard after
+  first login, or override it via the APP_9ROUTER_INITIAL_PASSWORD env var.
 developer: decolua
 website: https://9router.com
 submitter: Tomáš Kalina
