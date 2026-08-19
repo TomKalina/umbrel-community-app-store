@@ -1,0 +1,32 @@
+manifestVersion: 1
+id: lerix-9router
+name: 9Router
+tagline: Local AI gateway with OpenAI-compatible API
+icon: https://raw.githubusercontent.com/decolua/9router/master/images/9router.png
+category: AI
+version: "0.5.55"
+port: 20128
+description: >-
+  9Router is a local AI gateway and dashboard. It routes CLI/IDE traffic
+  across AI providers with automatic fallback, exposes an OpenAI-compatible
+  API on /v1, and provides a web dashboard on /dashboard for monitoring and
+  configuration.
+
+
+  State (SQLite database + backups) is persisted to the Umbrel data directory
+  via /app/data. Updates follow the standard Umbrel app update flow.
+developer: decolua
+website: https://9router.com
+submitter: Tomáš Kalina
+submission: https://github.com/TomKalina/umbrel-community-app-store
+repo: https://github.com/decolua/9router
+support: https://github.com/decolua/9router/issues
+gallery: []
+releaseNotes: >-
+  Initial release in the Lerix community app store.
+
+  Ships 9Router 0.5.55 with persistent state (/app/data).
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
