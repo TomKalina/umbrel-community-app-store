@@ -17,8 +17,8 @@ description: >-
   via /app/data. Updates follow the standard Umbrel app update flow.
 
 
-  Default login password is "9router" — change it in the dashboard after
-  first login, or override it via the APP_9ROUTER_INITIAL_PASSWORD env var.
+  Login password is generated automatically by Umbrel on install and shown
+  on the app's credentials screen. Change it any time from the dashboard.
 developer: decolua
 website: https://9router.com
 submitter: Tomáš Kalina
@@ -34,3 +34,4 @@ dependencies: []
 path: ""
 defaultUsername: ""
 defaultPassword: ""
+deterministicPassword: true
