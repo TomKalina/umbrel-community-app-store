@@ -7,7 +7,7 @@ environment:
     services:
       - web
     default: http://umbrel.local:3290
-    note: Public HTTPS URL of this app, e.g. https://inbox.example.com (Cloudflare Tunnel to this app's port). Required for Google/Microsoft sign-in. No trailing slash.
+    note: HTTPS URL you open the app at, e.g. https://inbox.example.com (Cloudflare Tunnel) or https://<machine>.<tailnet>.ts.net (tailscale serve --bg --https=443 http://127.0.0.1:3290). Required for Google/Microsoft sign-in. No trailing slash.
   - name: AUTH_ALLOWED_EMAILS
     services:
       - web
@@ -61,7 +61,7 @@ name: Inbox Zero
 tagline: AI email assistant for Gmail and Outlook
 icon: https://raw.githubusercontent.com/elie222/inbox-zero/main/apps/web/public/icons/icon-512x512.png
 category: automation
-version: "6cdf759"
+version: "6cdf759-patch.1"
 port: 3290
 description: >-
   Setup required before first use. Inbox Zero signs in with your own Google
@@ -118,7 +118,8 @@ submission: https://github.com/TomKalina/umbrel-community-app-store
 repo: https://github.com/elie222/inbox-zero
 support: https://github.com/elie222/inbox-zero/issues
 gallery: []
-releaseNotes: ""
+releaseNotes: >-
+  Enables live mailbox updates in the mail client (REDIS_URL was missing).
 dependencies: []
 path: ""
 defaultUsername: ""

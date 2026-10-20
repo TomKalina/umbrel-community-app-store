@@ -13,6 +13,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
       redis-http:
         condition: service_started
     environment:
@@ -24,6 +26,8 @@ services:
       DIRECT_URL: postgresql://inboxzero:${APP_LERIX_INBOX_ZERO_DB_PASSWORD}@lerix-inbox-zero_db_1:5432/inboxzero?schema=public
       REDIS_HTTP_URL: http://lerix-inbox-zero_redis-http_1:80
       REDIS_HTTP_TOKEN: ${APP_LERIX_INBOX_ZERO_REDIS_HTTP_TOKEN}
+      # Live mailbox updates (/api/mail-stream) use Redis pub/sub directly.
+      REDIS_URL: redis://:${APP_LERIX_INBOX_ZERO_REDIS_PASSWORD}@lerix-inbox-zero_redis_1:6379
       INTERNAL_API_URL: http://lerix-inbox-zero_web_1:3000
       AUTH_SECRET: ${APP_LERIX_INBOX_ZERO_AUTH_SECRET}
       # Never change after first start: stored OAuth tokens are encrypted with these.
