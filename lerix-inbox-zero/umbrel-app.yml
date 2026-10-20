@@ -1,0 +1,125 @@
+manifestVersion: 2.0
+id: lerix-inbox-zero
+storage:
+  dataRoot: data
+environment:
+  - name: NEXT_PUBLIC_BASE_URL
+    services:
+      - web
+    default: http://umbrel.local:3290
+    note: Public HTTPS URL of this app, e.g. https://inbox.example.com (Cloudflare Tunnel to this app's port). Required for Google/Microsoft sign-in. No trailing slash.
+  - name: AUTH_ALLOWED_EMAILS
+    services:
+      - web
+    note: Strongly recommended. Comma-separated emails allowed to sign up, e.g. you@gmail.com. Leave empty and anyone who can reach the app can create an account.
+  - name: GOOGLE_CLIENT_ID
+    services:
+      - web
+    default: skipped
+    note: Google Cloud OAuth "Web application" client ID. Keep "skipped" for Outlook-only.
+  - name: GOOGLE_CLIENT_SECRET
+    services:
+      - web
+    default: skipped
+    note: Google Cloud OAuth client secret. Keep "skipped" for Outlook-only.
+  - name: GOOGLE_PUBSUB_TOPIC_NAME
+    services:
+      - web
+    default: projects/unset/topics/unset
+    note: Gmail push topic, e.g. projects/my-project/topics/inbox-zero. Grant gmail-api-push@system.gserviceaccount.com the Publisher role on it.
+  - name: GOOGLE_PUBSUB_VERIFICATION_TOKEN
+    services:
+      - web
+    note: Random string (openssl rand -hex 32). Use the same value in the Pub/Sub push URL https://<your-domain>/api/google/webhook?token=<value>.
+  - name: MICROSOFT_CLIENT_ID
+    services:
+      - web
+    note: Microsoft Entra app (client) ID. Optional, only for Outlook accounts.
+  - name: MICROSOFT_CLIENT_SECRET
+    services:
+      - web
+    note: Microsoft Entra client secret. Optional, only for Outlook accounts.
+  - name: MICROSOFT_TENANT_ID
+    services:
+      - web
+    default: common
+    note: Keep "common" for multitenant or personal-account Entra apps. For a single-tenant app, enter its Directory (tenant) ID.
+  - name: DEFAULT_LLMS
+    services:
+      - web
+    default: anthropic:claude-sonnet-5
+    note: AI model as provider:model, e.g. anthropic:claude-sonnet-5, openai:gpt-6-luna, openrouter:anthropic/claude-sonnet-5 or openai-compatible:<model>.
+  - name: LLM_API_KEY
+    services:
+      - web
+    note: API key for the provider in DEFAULT_LLMS.
+  - name: OPENAI_COMPATIBLE_BASE_URL
+    services:
+      - web
+    note: Only for openai-compatible:<model>. Full base URL including /v1, e.g. http://<umbrel-LAN-IP>:<port>/v1. Do not use localhost.
+name: Inbox Zero
+tagline: AI email assistant for Gmail and Outlook
+icon: https://raw.githubusercontent.com/elie222/inbox-zero/main/apps/web/public/icons/icon-512x512.png
+category: automation
+version: "6cdf759"
+port: 3290
+description: >-
+  Setup required before first use. Inbox Zero signs in with your own Google
+  Cloud or Microsoft Entra OAuth app and needs a public HTTPS URL, for example
+  a Cloudflare Tunnel public hostname pointing at this app's port. Enter
+  everything in the app settings on Umbrel, then restart the app.
+
+
+  Important: Umbrel's login page is not reachable through a tunnel, so sign-in
+  over the public URL only works after you set AUTH_ALLOWED_EMAILS and then
+  turn off "Require Umbrel login" in this app's Umbrel settings. The app is then
+  public and its own Google/Microsoft sign-in protects it.
+
+
+  - Google Cloud: create a project, enable the Gmail API, configure the OAuth
+  consent screen (External) and create a "Web application" OAuth client with
+  redirect URIs https://<your-domain>/api/auth/callback/google and
+  https://<your-domain>/api/google/linking/callback (add
+  /api/google/calendar/callback and /api/google/drive/callback if you will
+  connect Calendar or Drive). Publish the consent screen to "In production"
+  (unverified is fine for personal use); in "Testing" Google expires the
+  sign-in every 7 days.
+
+  - Gmail push: create a Pub/Sub topic, give gmail-api-push@system.gserviceaccount.com
+  the Publisher role, and add a push subscription to
+  https://<your-domain>/api/google/webhook?token=<GOOGLE_PUBSUB_VERIFICATION_TOKEN>.
+
+  - Microsoft Entra (Outlook, optional): register a Web app with redirect URIs
+  https://<your-domain>/api/auth/callback/microsoft and
+  https://<your-domain>/api/outlook/linking/callback, add the delegated Graph
+  permissions from the upstream Microsoft OAuth guide and create a client secret.
+
+  - AI: set DEFAULT_LLMS and LLM_API_KEY.
+
+  - Security: set AUTH_ALLOWED_EMAILS to your own address. Gmail and Outlook
+  webhooks are always reachable without the Umbrel login and check their own
+  tokens.
+
+
+  Inbox Zero is an open-source AI email assistant: it organizes your inbox with
+  rules written in plain English, drafts replies, bulk-unsubscribes from
+  newsletters, blocks cold emails and shows email analytics. Premium features
+  are unlocked for self-hosting. The Inbox Zero desktop app can use this server
+  only when started with the environment variable
+  INBOX_ZERO_APP_URL=https://<your-domain>.
+
+
+  Packaged from the upstream main branch image (commit 6cdf759), which is what
+  the upstream self-hosting compose file uses.
+developer: Elie Steinbock
+website: https://www.getinboxzero.com
+submitter: Tomáš Kalina
+submission: https://github.com/TomKalina/umbrel-community-app-store
+repo: https://github.com/elie222/inbox-zero
+support: https://github.com/elie222/inbox-zero/issues
+gallery: []
+releaseNotes: ""
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
