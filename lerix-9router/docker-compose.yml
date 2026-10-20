@@ -7,7 +7,7 @@ services:
       APP_PORT: 20128
 
   server:
-    image: decolua/9router:latest
+    image: decolua/9router:0.5.104@sha256:5fc7020f3cf1ca6831bffe80314ecab9dde915d27ee3c479a4bb66f45dabbc27
     restart: unless-stopped
     environment:
       DATA_DIR: /app/data

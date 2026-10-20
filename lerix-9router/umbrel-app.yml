@@ -4,7 +4,7 @@ name: 9Router
 tagline: Local AI gateway with OpenAI-compatible API
 icon: https://raw.githubusercontent.com/decolua/9router/master/images/9router.png
 category: AI
-version: "0.5.55"
+version: "0.5.104"
 port: 20128
 description: >-
   9Router is a local AI gateway and dashboard. It routes CLI/IDE traffic
@@ -27,9 +27,19 @@ repo: https://github.com/decolua/9router
 support: https://github.com/decolua/9router/issues
 gallery: []
 releaseNotes: >-
-  Initial release in the Lerix community app store.
+  Updates 9Router from 0.5.55 to 0.5.104 and pins the image, so future
+  versions arrive through the Umbrel update flow.
 
-  Ships 9Router 0.5.55 with persistent state (/app/data).
+
+  - Dashboard session now expires after 24 hours
+
+  - Removed duplicate "qwen" provider and retired Antigravity 3.5/3-flash and
+  Codex gpt-5.5 models; update combos that use them
+
+  - /responses now requires an API key
+
+  - Search requests to self-hosted backends on the LAN (e.g. SearXNG) are
+  blocked by SSRF protection
 dependencies: []
 path: ""
 defaultUsername: ""
