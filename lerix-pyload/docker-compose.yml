@@ -9,7 +9,7 @@ services:
       APP_PORT: 8000
 
   server:
-    image: lscr.io/linuxserver/pyload-ng:latest
+    image: lscr.io/linuxserver/pyload-ng:0.5.0b3.dev101-ls258@sha256:9bc594e9c80f3faa0906cb2e65bfab0989e3330332b3c1441cb7a7226ba02b9e
     restart: unless-stopped
     environment:
       PUID: 1000
